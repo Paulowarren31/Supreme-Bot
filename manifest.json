@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "better than antons bot",
+  "version": "0.1",
+  "options_page": "options.html",
+  "content_scripts": [{
+    "matches": ["http://www.supremenewyork.com/shop/all"],
+    "js": ["jquery.js", "bot.js"]
+  }, {
+    "matches": ["http://www.supremenewyork.com/shop/*"],
+    "exclude_globs": ["*all*"],
+    "js": ["jquery.js", "bot2.js"]
+  }, {
+    "matches": ["https://www.supremenewyork.com/checkout"],
+    "js": ["jquery.js", "bot3.js"]
+  }],
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "activeTab",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "scripts": ["jquery.js", "background.js"]
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  }
+
+}
