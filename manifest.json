@@ -1,18 +1,21 @@
 {
   "manifest_version": 2,
-  "name": "better than antons bot",
-  "version": "0.1",
+  "name": "ez preme",
+  "version": "0.2",
   "options_page": "options.html",
   "content_scripts": [{
     "matches": ["http://www.supremenewyork.com/shop/all"],
-    "js": ["jquery.js", "bot.js"]
+    "js": ["jquery.js", "bot.js"],
+    "run_at": "document_end"
   }, {
     "matches": ["http://www.supremenewyork.com/shop/*"],
     "exclude_globs": ["*all*"],
-    "js": ["jquery.js", "bot2.js"]
+    "js": ["jquery.js", "bot2.js"],
+    "run_at": "document_end"
   }, {
-    "matches": ["https://www.supremenewyork.com/checkout"],
-    "js": ["jquery.js", "bot3.js"]
+    "matches": ["http://www.supremenewyork.com/checkout"],
+    "js": ["jquery.js", "bot3.js"],
+    "run_at": "document_end"
   }],
 
   "permissions": [

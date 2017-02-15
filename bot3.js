@@ -1,6 +1,7 @@
+//we are in /checkout
+
 var get = ['name', 'email', 'phone', 'address', 'zip', 'city', 'state', 'country',
-  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv'
-        ];
+  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv'];
 
 chrome.storage.sync.get(get, function(res) {
   console.log(res)

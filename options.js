@@ -1,6 +1,5 @@
 function save_options() {
-  console.log('asd')
-  var img_code = document.getElementById('img_code').value;
+  var img_codes = document.getElementById('img_codes').value.split(',');
   var name = document.getElementById('name').value;
   var email = document.getElementById('email').value;
   var phone = document.getElementById('phone').value;
@@ -17,7 +16,7 @@ function save_options() {
 
 
   chrome.storage.sync.set({
-    img_code: img_code,
+    img_codes: img_codes,
     name: name,
     email: email,
     phone: phone,
@@ -43,7 +42,7 @@ function save_options() {
 
 function restore_options() {
   chrome.storage.sync.get({
-    img_code: '',
+    img_codes: '',
     name: '',
     email: '',
     phone: '',
@@ -59,7 +58,7 @@ function restore_options() {
     cvv: ''
 
   }, function(items) {
-    document.getElementById('img_code').value = items.img_code;
+    document.getElementById('img_codes').value = items.img_codes;
     document.getElementById('name').value = items.name;
     document.getElementById('email').value = items.email;
     document.getElementById('phone').value = items.phone;
