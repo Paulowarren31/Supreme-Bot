@@ -6,9 +6,7 @@ chrome.storage.sync.get('img_codes', function(res){
   img_codes.pop();
 
   if(img_codes.length == 0){
-    setTimeout(function(){
       chrome.runtime.sendMessage({type: "done"});
-    }, 100);
   }
   else{
     chrome.storage.sync.set({

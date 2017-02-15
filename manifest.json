@@ -2,19 +2,19 @@
   "manifest_version": 2,
   "name": "ez preme",
   "version": "0.2",
-  "options_page": "options.html",
+  "options_page": "options/options.html",
   "content_scripts": [{
     "matches": ["http://www.supremenewyork.com/shop/all"],
-    "js": ["jquery.js", "bot.js"],
+    "js": ["jquery.js", "content_scripts/bot.js"],
     "run_at": "document_end"
   }, {
     "matches": ["http://www.supremenewyork.com/shop/*"],
     "exclude_globs": ["*all*"],
-    "js": ["jquery.js", "bot2.js"],
+    "js": ["jquery.js", "content_scripts/bot2.js"],
     "run_at": "document_end"
   }, {
     "matches": ["http://www.supremenewyork.com/checkout"],
-    "js": ["jquery.js", "bot3.js"],
+    "js": ["jquery.js", "content_scripts/bot3.js"],
     "run_at": "document_end"
   }],
 
@@ -29,7 +29,7 @@
     "scripts": ["jquery.js", "background.js"]
   },
   "browser_action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup/popup.html"
   }
 
 }

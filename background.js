@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener(function(r, s, res) {
     goToItem(r.url);
   }
   if (r.type == "keep_going"){
-     search();
+    search();
   }
   if (r.type == "done") {
     goToCheckout();
@@ -11,17 +11,21 @@ chrome.runtime.onMessage.addListener(function(r, s, res) {
 })
 
 function search() {
-  chrome.tabs.create({
-    url: "http://www.supremenewyork.com/shop/all"
-  }, function(tab) {})
+  var url = "http://www.supremenewyork.com/shop/all"
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.update(tabs[0].id, {url: url});
+  });
+  //chrome.tabs.create({
+  //  url: "http://www.supremenewyork.com/shop/all"
+  //}, function(tab) {})
 }
 
 
 function goToItem(url) {
   var bigUrl = "http://www.supremenewyork.com" + url;
-  chrome.tabs.create({
-    url: bigUrl
-  })
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.update(tabs[0].id, {url: bigUrl});
+  });
 
 }
 
