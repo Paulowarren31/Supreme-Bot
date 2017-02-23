@@ -3,17 +3,20 @@
   "name": "ez preme",
   "version": "0.2",
   "options_page": "options/options.html",
+  "icons": {
+    "128": "img.png"
+  },
   "content_scripts": [{
-    "matches": ["http://www.supremenewyork.com/shop/all"],
+    "matches": ["*://www.supremenewyork.com/shop/all"],
     "js": ["jquery.js", "content_scripts/bot.js"],
     "run_at": "document_end"
   }, {
-    "matches": ["http://www.supremenewyork.com/shop/*"],
-    "exclude_globs": ["*all*"],
+    "matches": ["*://www.supremenewyork.com/shop/*"],
+    "exclude_globs": ["*all*", "*cart*"],
     "js": ["jquery.js", "content_scripts/bot2.js"],
     "run_at": "document_end"
   }, {
-    "matches": ["http://www.supremenewyork.com/checkout"],
+    "matches": ["*://www.supremenewyork.com/checkout"],
     "js": ["jquery.js", "content_scripts/bot3.js"],
     "run_at": "document_end"
   }],

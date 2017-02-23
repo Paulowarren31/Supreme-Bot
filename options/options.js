@@ -16,8 +16,10 @@ function save_options() {
   var cvv = document.getElementById('cvv').value;
 
 
+
   chrome.storage.sync.set({
     img_codes: img_codes,
+    working_codes: img_codes,
     sizes: sizes,
     name: name,
     email: email,
@@ -79,6 +81,8 @@ function restore_options() {
   });
 }
 
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click',
     save_options);
+

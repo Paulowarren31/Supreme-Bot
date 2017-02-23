@@ -7,7 +7,7 @@ chrome.storage.sync.get(get, function(res) {
   console.log(res)
   $('#order_billing_name').val(res.name);
   $('#order_email').val(res.email);
-  $('#order_tl').val(res.phone);
+  $('#order_tel').val(res.phone);
   $('#bo').val(res.address);
   $('#order_billing_zip').val(res.zip);
   $('#order_billing_city').val(res.city);
@@ -18,4 +18,7 @@ chrome.storage.sync.get(get, function(res) {
   $('#credit_card_month').val(res.exp_mon);
   $('#credit_card_year').val(res.exp_yr);
   $('#vval').val(res.cvv);
+  $('#order_terms').prop('checked', true);
+
+  chrome.runtime.sendMessage({type: "off"}, function(res){});
 });

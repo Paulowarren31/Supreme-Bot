@@ -2,10 +2,29 @@ $(function() {
 
   $("#start-btn").click(function(e) {
     var bgPage = chrome.extension.getBackgroundPage();
-    bgPage.search();
+    bgPage.start();
+    $('#start-btn').addClass('hidden')
+    $('#stop-btn').removeClass('hidden')
+  })
+  $('#stop-btn').click(function(){
+    var bgPage = chrome.extension.getBackgroundPage();
+    bgPage.start();
+    $('#stop-btn').addClass('hidden')
+    $('#start-btn').removeClass('hidden')
   })
 
-  chrome.storage.sync.get('img_codes', function(res){
-    $('#img_codes').text(res.img_codes);
+  chrome.runtime.sendMessage({type: "check"}, function(res){
+    if(res.check){ // if running
+
+      $('#start-btn').addClass('hidden')
+      $('#stop-btn').removeClass('hidden')
+    }
+    else{
+
+      $('#stop-btn').addClass('hidden')
+      $('#start-btn').removeClass('hidden')
+    }
+    $('#status').text(res.state)
+
   });
 });
