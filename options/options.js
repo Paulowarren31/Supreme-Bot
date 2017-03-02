@@ -15,7 +15,7 @@ function save_options() {
   var exp_yr = document.getElementById('exp-yr').value;
   var cvv = document.getElementById('cvv').value;
 
-
+  var buy_auto = document.getElementById('auto').checked;
 
   chrome.storage.sync.set({
     img_codes: img_codes,
@@ -33,7 +33,8 @@ function save_options() {
     card_number: card_number,
     exp_mon: exp_mon,
     exp_yr: exp_yr,
-    cvv: cvv
+    cvv: cvv,
+    buy_auto: buy_auto
 
   }, function() {
     var status = document.getElementById('status');
@@ -60,7 +61,8 @@ function restore_options() {
     card_number: '',
     exp_mon: '',
     exp_yr: '',
-    cvv: ''
+    cvv: '',
+    buy_auto: false
 
   }, function(items) {
     document.getElementById('img_codes').value = items.img_codes;
@@ -78,6 +80,7 @@ function restore_options() {
     document.getElementById('exp-mon').value = items.exp_mon;
     document.getElementById('exp-yr').value = items.exp_yr;
     document.getElementById('cvv').value = items.cvv;
+    document.getElementById('auto').checked = items.buy_auto;
   });
 }
 

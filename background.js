@@ -1,17 +1,26 @@
-var waiting = false;
-var running = false;
-var current_state = 'press start'
+running = false
+waiting = false
+current_state = 'press start'
+time_left = -1
+
+worker = new Worker('worker.js')
 
 chrome.runtime.onMessage.addListener(function(r, s, res) {
   if (r.type == "check"){
-    res({check: running, state: current_state, next_date: nextDay(4)});
+    res({waiting: waiting, running: running, state: current_state, time_until: time_left});
   }
   if (r.type == "url") {
     goToItem(r.url);
   }
   if (r.type == "keep_going"){
-
     search();
+  }
+  if (r.type == "run") {
+    run()
+    //restart worker
+    worker.terminate()
+    worker = undefined
+    worker = new Worker('worker.js')
   }
   if (r.type == "done") {
     goToCheckout();
@@ -50,13 +59,39 @@ function goToCheckout() {
   })
 }
 
-function start(){
-  waiting = true;
-  next_drop = nextDay(4)
-  today = new Date();
-  console.log(next_drop)
-  if(today.getDate() == next_drop.getDate()){
-  }
+function wait(){
+  current_state = 'waiting...'
+  waiting = true
+
+  worker.postMessage({waiting: waiting})
+
+  worker.addEventListener('message', function(msg){
+    if(msg.data.type == 'update'){
+      time_left = msg.data.seconds_until
+      chrome.runtime.sendMessage({time_until: time_left})
+    }
+    if(msg.data.type == 'done'){
+      run();
+    }
+  })
+}
+
+function stop_wait(){
+  waiting = false;
+  current_state = 'press wait or start'
+  time_until = -1
+  restart_worker()
+  //restart worker
+  worker.terminate()
+  worker = undefined
+  worker = new Worker('worker.js')
+
+
+}
+
+
+function stop(){
+  running = false;
 }
 
 function nextDay(x){
@@ -69,13 +104,14 @@ function nextDay(x){
   }
   now.setHours(10)
   now.setMinutes(0)
-  now.setSecond(0)
+  now.setSeconds(0)
   now.setMilliseconds(0)
   return now;
 }
 
 function run(){
-  running = !running
+  running = true;
+  console.log('running')
   chrome.storage.sync.get('img_codes', function(res){
     chrome.storage.sync.set({
       working_codes: res.img_codes

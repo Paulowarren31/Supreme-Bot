@@ -1,7 +1,7 @@
 //we are in /checkout
 
 var get = ['name', 'email', 'phone', 'address', 'zip', 'city', 'state', 'country',
-  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv'];
+  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto'];
 
 chrome.storage.sync.get(get, function(res) {
   console.log(res)
@@ -18,7 +18,12 @@ chrome.storage.sync.get(get, function(res) {
   $('#credit_card_month').val(res.exp_mon);
   $('#credit_card_year').val(res.exp_yr);
   $('#vval').val(res.cvv);
-  $('#order_terms').prop('checked', true);
+  $('.iCheck-helper')[1].click();
+
+  if(res.buy_auto){
+    //TODO
+    //click process payment button
+  }
 
   chrome.runtime.sendMessage({type: "off"}, function(res){});
 });
