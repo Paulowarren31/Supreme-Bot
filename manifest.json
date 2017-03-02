@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "ez preme",
-  "version": "0.4",
+  "version": "0.5",
   "options_page": "options/options.html",
   "icons": {
     "128": "img.png"
