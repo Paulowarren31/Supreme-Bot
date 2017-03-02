@@ -11,6 +11,7 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
     if(size_choice == res.sizes.length) break; //found no sizes we chose :(
     size_choice++;
   }
+
   if(size_choice != res.sizes.length){
     $("#add-remove-buttons :input")[0].click();
   }
@@ -24,17 +25,15 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
   chrome.storage.sync.set({
     working_codes: img_codes
   }, function(){
-    if(img_codes.length == 0){
 
-      setTimeout(function(){
-        chrome.runtime.sendMessage({type: "done"});
-      }, 150)
-    }
-    else{
-      setTimeout(function(){
-        chrome.runtime.sendMessage({type: "keep_going"});
-      }, 150)
-    }
+    var type = ''
+    if(img_codes.length == 0) type = 'done'
+    else type = 'keep_going'
+
+    setTimeout(function(){
+      chrome.runtime.sendMessage({type: type});
+    }, 400)
+
   })
 });
 

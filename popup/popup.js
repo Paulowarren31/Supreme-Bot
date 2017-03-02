@@ -53,6 +53,7 @@ $(function() {
       
       if(res.time_until != -1){
         $('#time_until').text(res.time_until)
+        $('#show').removeClass('hidden')
       }
 
     });
