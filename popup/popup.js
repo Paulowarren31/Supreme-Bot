@@ -3,6 +3,7 @@ $(function() {
   $("#start-wait-btn").click(function(e) {
     check()
     $('#start-wait-btn').addClass('hidden')
+    $('#show').removeClass('hidden')
     $('#stop-wait-btn').removeClass('hidden')
     var bgPage = chrome.extension.getBackgroundPage();
     bgPage.wait();
@@ -11,6 +12,7 @@ $(function() {
   $("#stop-wait-btn").click(function(e) {
     $('#stop-wait-btn').addClass('hidden')
     $('#start-wait-btn').removeClass('hidden')
+    $('#show').addClass('hidden')
     var bgPage = chrome.extension.getBackgroundPage();
     bgPage.stop_wait();
     check()

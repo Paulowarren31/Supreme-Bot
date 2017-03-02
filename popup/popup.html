@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <title>BOT SETTINGS</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <head>
+        <title>BOT SETTINGS</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
 
-    <script src="../jquery.js"></script>
-    <script type="text/javascript" src="popup.js"></script>
-    <style>
-        .hidden{display: none;}
-    </style>
-</head>
+        <script src="../jquery.js"></script>
+        <script type="text/javascript" src="popup.js"></script>
+        <style>
+            .hidden{display: none;}
+            body{
+                width: 275px;
+            }
+        </style>
+    </head>
 
-<body style="width: 150px;" class="p-2">
-    <p id="status"><p>
-    <p><div id="time_until"></div> seconds left<p>
-    <button id="start-wait-btn" class="btn btn-success">Wait</button>
-    <button id="stop-wait-btn" class="btn btn-danger hidden">Stop Wait</button>
-    <br>
-    <br>
-    <button id="start-btn" class="btn btn-success">Start</button>
-    <button id="stop-btn" class="btn btn-danger hidden">Stop</button>
-
-</body>
+    <body class="p-2">
+        <div class="row">
+            <div class="col-xs-6">
+                <button id="start-wait-btn" class="btn btn-success">Wait</button>
+                <button id="stop-wait-btn" class="btn btn-danger hidden">Stop Wait</button>
+                <br>
+                <br>
+                <button id="start-btn" class="btn btn-success">Start</button>
+                <button id="stop-btn" class="btn btn-danger hidden">Stop</button>
+            </div>
+            <div class="col-xs-6">
+                <p id="status"></p>
+                <div id="show" class="hidden"><p><div id="time_until"></div>seconds until next drop</p></div>
+            </div>
+        </div>
+    </body>
 
 </html>

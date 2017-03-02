@@ -1,6 +1,6 @@
 running = false
 waiting = false
-current_state = 'press start'
+current_state = 'press wait or start'
 time_left = -1
 
 worker = new Worker('worker.js')
@@ -80,12 +80,11 @@ function stop_wait(){
   waiting = false;
   current_state = 'press wait or start'
   time_until = -1
-  restart_worker()
+
   //restart worker
   worker.terminate()
   worker = undefined
   worker = new Worker('worker.js')
-
 
 }
 
