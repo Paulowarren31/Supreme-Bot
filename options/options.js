@@ -34,7 +34,8 @@ function save_options() {
     exp_mon: exp_mon,
     exp_yr: exp_yr,
     cvv: cvv,
-    buy_auto: buy_auto
+    buy_auto: buy_auto,
+    running: false
 
   }, function() {
     var status = document.getElementById('status');
@@ -62,7 +63,8 @@ function restore_options() {
     exp_mon: '',
     exp_yr: '',
     cvv: '',
-    buy_auto: false
+    buy_auto: false,
+    running: false
 
   }, function(items) {
     document.getElementById('img_codes').value = items.img_codes;

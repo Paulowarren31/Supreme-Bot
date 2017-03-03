@@ -1,7 +1,7 @@
 //we are in /checkout
 
 var get = ['name', 'email', 'phone', 'address', 'zip', 'city', 'state', 'country',
-  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto'];
+  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto', 'running'];
 
 chrome.storage.sync.get(get, function(res) {
   console.log(res)
@@ -19,11 +19,11 @@ chrome.storage.sync.get(get, function(res) {
   $('#credit_card_year').val(res.exp_yr);
   $('#vval').val(res.cvv);
   $('.iCheck-helper')[1].click();
+  chrome.runtime.sendMessage({type: "off"}, function(res){});
 
   if(res.buy_auto){
-    //TODO
-    //click process payment button
+    //warning if buy_auto on this will finish payment
+    $('[name="commit"]').click()
   }
 
-  chrome.runtime.sendMessage({type: "off"}, function(res){});
 });

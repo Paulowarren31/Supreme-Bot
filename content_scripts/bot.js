@@ -1,10 +1,10 @@
 //we are in /shop/all
 chrome.storage.sync.get('working_codes', function(res){
   var working_codes = res.working_codes;
-  console.log(working_codes)
   current_code = working_codes[working_codes.length - 1]
+  console.log(current_code)
 
-  var url = $('img[alt='+current_code+']').parent().attr("href");
+  var url = $('img[alt="'+ current_code +'"]').parent().attr("href");
   //if not found on shop
   if(!url){
     //try again after 250ms

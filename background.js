@@ -85,12 +85,12 @@ function stop_wait(){
   worker.terminate()
   worker = undefined
   worker = new Worker('worker.js')
-
 }
 
 
 function stop(){
   running = false;
+  chrome.storage.sync.set({running: false})
 }
 
 function nextDay(x){
@@ -113,7 +113,8 @@ function run(){
   console.log('running')
   chrome.storage.sync.get('img_codes', function(res){
     chrome.storage.sync.set({
-      working_codes: res.img_codes
+      working_codes: res.img_codes,
+      running: true
     })
   })
   search();
