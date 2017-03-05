@@ -46,7 +46,7 @@ function save_options() {
   });
 }
 
-function restore_options() {
+function init() {
   chrome.storage.sync.get({
     img_codes: '',
     sizes: '',
@@ -83,11 +83,103 @@ function restore_options() {
     document.getElementById('exp-yr').value = items.exp_yr;
     document.getElementById('cvv').value = items.cvv;
     document.getElementById('auto').checked = items.buy_auto;
+
+    //load json with items
+
+    var request = new XMLHttpRequest()
+    request.open('GET', 'https://supremejson.000webhostapp.com/items.json', true)
+
+    console.log('asd')
+    request.onload = function(){
+      if (request.status >= 200 && request.status < 400){
+        var json = JSON.parse(request.responseText).items
+        display_items(json)
+
+        //update added items
+
+        code_arr = items.img_codes
+        for(code in code_arr){
+          code = code_arr[code]
+          elt = document.getElementById(code)
+          console.log(elt)
+
+          elt.classList.remove('btn-primary')
+          elt.classList.add('btn-success')
+          elt.innerHTML = 'added'
+        }
+      }
+    }
+    request.send()
+
+
   });
+
 }
 
+function display_items(items){
+  item_list = document.getElementById('item-list')
 
-document.addEventListener('DOMContentLoaded', restore_options);
+  for(i in items){
+    i = items[i]
+    item = document.createElement('li')
+    item.classList.add('list-group-item')
+    btn = '<button id="'+i.alt+'" type="button" class="btn btn-primary float-sm-right">add</button>'
+    item.innerHTML = i.title + '\t' + i.color + '\t' + i.alt + '\t' + btn
+
+    item_list.appendChild(item)
+
+    btn = document.getElementById(i.alt)
+    btn.onclick = function(e) {
+
+      //togggle btn and update item list
+      toggleBtn(e.target.id)
+    }
+  }
+}
+
+function toggleBtn(id){
+  elt = document.getElementById(id)
+  //we just added this, change to blue
+  if(hasClass(id, 'btn-primary')){
+    elt.classList.remove('btn-primary')
+    elt.classList.add('btn-success')
+    elt.innerHTML = 'added'
+
+    codes = document.getElementById('img_codes')
+    if(codes.value.length == 0) newCodes = id
+    else newCodes = codes.value + ',' + id
+
+    codes.value = newCodes
+
+  }
+  else{
+    elt.classList.remove('btn-success')
+    elt.classList.add('btn-primary')
+    elt.innerHTML = 'add'
+
+    codes = document.getElementById('img_codes')
+    current_items = codes.value.split(',')
+    new_items = ''
+    for(item in current_items){
+      item = current_items[item]
+      if(item != id){
+        new_items += item + ','
+      }
+    }
+
+    codes.value = new_items.substring(0, new_items.length - 1) //chop off last ,
+
+
+  }
+}
+
+function hasClass(id, className){
+  elt = document.getElementById(id)
+  list = elt.classList.value.split(' ')
+  return list.indexOf(className) > -1
+}
+
+document.addEventListener('DOMContentLoaded', init);
 document.getElementById('save').addEventListener('click',
-    save_options);
+  save_options);
 
