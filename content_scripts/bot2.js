@@ -12,12 +12,17 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
     size_choice++;
   }
 
-  if(size_choice != res.sizes.length){
+
+  if(size_choice != res.sizes.length || $('#size').attr('type') == 'hidden'){
+
+    //get val of correct select option
+    val = $('#size option').filter(function () { 
+      return $(this).html() == res.sizes[size_choice]; 
+    }).val();
+
+    $("#size").val(val).change();
     $("#add-remove-buttons :input")[0].click();
   }
-
-  //TODO
-  //select correct size
 
   var img_codes = res.working_codes;
   img_codes.pop();
