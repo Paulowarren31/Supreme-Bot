@@ -89,7 +89,6 @@ function init() {
     var request = new XMLHttpRequest()
     request.open('GET', 'https://supremejson.000webhostapp.com/items.json', true)
 
-    console.log('asd')
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
         var json = JSON.parse(request.responseText).items
@@ -101,7 +100,6 @@ function init() {
         for(code in code_arr){
           code = code_arr[code]
           elt = document.getElementById(code)
-          console.log(elt)
 
           elt.classList.remove('btn-primary')
           elt.classList.add('btn-success')
@@ -123,7 +121,7 @@ function display_items(items){
     i = items[i]
     item = document.createElement('li')
     item.classList.add('list-group-item')
-    btn = '<button id="'+i.alt+'" type="button" class="btn btn-primary float-sm-right">add</button>'
+    btn = '<button id="'+i.alt+'" type="button" class="btn btn-sm btn-primary float-sm-right">add</button>'
     item.innerHTML = i.title + '\t' + i.color + '\t' + i.alt + '\t' + btn
 
     item_list.appendChild(item)
@@ -178,8 +176,22 @@ function hasClass(id, className){
   list = elt.classList.value.split(' ')
   return list.indexOf(className) > -1
 }
-
 document.addEventListener('DOMContentLoaded', init);
-document.getElementById('save').addEventListener('click',
-  save_options);
+document.getElementById('save').addEventListener('click', save_options);
+
+
+$(function(){
+  jQuery.expr[':'].icontains = function(a, i, m) {
+  return jQuery(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+  };
+
+  $('#item-search').bind("propertychange input", function(e){
+    item = e.target.value
+    $('#item-list > li:not(:icontains('+item+'))').hide();
+    $('#item-list > li:icontains('+item+')').show();
+  })
+
+
+})
 

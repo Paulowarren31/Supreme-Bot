@@ -4,10 +4,25 @@
     <head>
         <title>Settings</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+        <script src="../jquery.js"></script> 
+
+        <style>
+            @font-face{
+                font-family: font;
+                src: url(../sup.woff);
+            }
+            h1{
+                font-family: font;
+                font-weight: bold;
+            }
+            label.form-check-label{
+                font-family: font;
+            }
+        </style>
 
     </head>
 
-    <body style="padding-top: 40px;">
+    <body style="padding-top: 40px; background: url('../worn_dots.png')">
         <div class="container" )>
             <div class="card" style="border-color: #a9a9a9;">
                 <h1 class="card-header"> Settings </h1>
@@ -221,13 +236,21 @@
                 </div>
             </div>
             <div class="card" style="border-color: #a9a9a9;">
-                <h1 class="card-header"> Choose Items </h1>
+                <div class="card-header">
+                    <h1 style="display: inline;"> Choose Items </h1>
+                    <small class="text-primary float-sm-right">
+                        You can't add multiple colors of one item
+                    </small>
+                </div>
                 <div class="card-block">
-                    <ul class="list-group" id="item-list">
+                    <form class="form-inline">
+                        <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="item-search" placeholder="Search">
+                    </form>
+                    <ul class="list-group" id="item-list" style="height: 500px; overflow-y: scroll;">
                     </ul>
                 </div>
             </div>
-            
+
             <script src="options.js"></script>
         </body>
 
