@@ -41,4 +41,6 @@ for img in soup.find_all('img'):
 with open('items.json', 'w') as f:
   if(add_c != 0):
     json.dump(data, f)
-    print('found ' + str(add_c) + ' new items and saved them')
+    print('Scan finished, found ' + str(add_c) + ' new items and saved them')
+  else:
+    print('Scan finished, no new items found')

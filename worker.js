@@ -23,7 +23,8 @@ self.onmessage = function (msg){
 function nextDay(x){
   var now = new Date();
   now.setDate(now.getDate() + (x+(7-now.getDay())) % 7);
-  if(now.getDay() == 4){
+
+  if(new Date() == 4){
     if(now.getHours() >= 11){ // if we are on a thurs but past drop time
       now.setDate(now.getDate() + 7) // add week
     }
