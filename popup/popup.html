@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <title>BOT SETTINGS</title>
+        <title>Free Supreme Bot</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
 
         <script src="../jquery.js"></script>
@@ -12,22 +12,38 @@
             body{
                 width: 275px;
             }
+            p,div{
+                font-family: "Courier New"
+            }
+            .button {
+                background: red;
+                border: 1px solid red;
+                border-radius: 0;
+                color: #fff;
+                font-weight: bold;
+                padding: 0.27273em 0;
+                text-align: center;
+                white-space: nowrap;
+                width: 6em;
+            }
+            .button:hover{
+                background: #e24b4b;
+            }
         </style>
     </head>
 
-    <body class="p-2">
+    <body class="p-2 text-xs-center">
+        <h4 class="mb-2">Free Supreme Bot</h4>
+        <p id="status"></p>
+        <div id="show" class="hidden"><p><div id="time_until"></div>seconds until next drop</p></div>
         <div class="row">
             <div class="col-xs-6">
-                <button id="start-wait-btn" class="btn btn-success">Wait</button>
-                <button id="stop-wait-btn" class="btn btn-danger hidden">Stop Wait</button>
-                <br>
-                <br>
-                <button id="start-btn" class="btn btn-success">Start</button>
-                <button id="stop-btn" class="btn btn-danger hidden">Stop</button>
+                <button id="start-wait-btn" class="button">Wait</button>
+                <button id="stop-wait-btn" class="button hidden">Stop Wait</button>
             </div>
             <div class="col-xs-6">
-                <p id="status"></p>
-                <div id="show" class="hidden"><p><div id="time_until"></div>seconds until next drop</p></div>
+                <button id="start-btn" class="button">Start</button>
+                <button id="stop-btn" class="button hidden">Stop</button>
             </div>
         </div>
     </body>

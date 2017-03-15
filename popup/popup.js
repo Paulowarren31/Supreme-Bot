@@ -51,7 +51,7 @@ $(function() {
       }
       $('#status').text(res.state)
       
-      if(res.time_until != -1){
+      if(res.time_until != -1 && res.waiting){
         $('#time_until').text(res.time_until)
         $('#show').removeClass('hidden')
       }
