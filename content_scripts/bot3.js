@@ -19,11 +19,11 @@ chrome.storage.sync.get(get, function(res) {
   $('#credit_card_year').val(res.exp_yr);
   $('#vval').val(res.cvv);
   $('.iCheck-helper')[1].click();
-  chrome.runtime.sendMessage({type: "off"}, function(res){});
+  //chrome.runtime.sendMessage({type: "off"}, function(res){});
 
   if(res.buy_auto){
     //warning if buy_auto on this will finish payment
-    $('[name="commit"]').click()
+    //$('[name="commit"]').click()
   }
 
 });
