@@ -34,9 +34,14 @@ $(function() {
   })
 
   chrome.runtime.onMessage.addListener(function(req, sender, res){
-    if(req.time_until != -1){
+    if(req.type == 'update' && req.time_until != 1){
       $('#time_until').text(req.time_until)
     }
+    if(req.type == 'off'){
+      $('#stop-btn').addClass('hidden')
+      $('#start-btn').removeClass('hidden')
+    }
+
   })
 
   function check(){
@@ -50,7 +55,7 @@ $(function() {
         $('#stop-btn').removeClass('hidden')
       }
       $('#status').text(res.state)
-      
+
       if(res.time_until != -1 && res.waiting){
         $('#time_until').text(res.time_until)
         $('#show').removeClass('hidden')
