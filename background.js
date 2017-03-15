@@ -66,9 +66,10 @@ function wait(){
   worker.postMessage({waiting: waiting})
 
   worker.addEventListener('message', function(msg){
+    console.log(msg)
     if(msg.data.type == 'update'){
       time_left = msg.data.seconds_until
-      chrome.runtime.sendMessage({time_until: time_left})
+      chrome.runtime.sendMessage({type: 'update_time', time_until: time_left})
     }
     if(msg.data.type == 'done'){
       run();

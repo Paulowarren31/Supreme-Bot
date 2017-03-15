@@ -34,7 +34,7 @@ $(function() {
   })
 
   chrome.runtime.onMessage.addListener(function(req, sender, res){
-    if(req.type == 'update' && req.time_until != 1){
+    if(req.type == 'update_time' && req.time_until != 1){
       $('#time_until').text(req.time_until)
     }
     if(req.type == 'off'){
