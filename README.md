@@ -10,8 +10,7 @@
   1. Added item select area, items should be updated before drop in US.
   2. Added timing feature that waits until 11AM to start the bot
   3. Added option to let bot click final checkout
-# Upcoming features
-  1. UK support (may be iffy  because item codes may not be updated when UK drops)
+# 1.3 update
+  1. Added UK support, new style to popup
 # Known Bugs
-  1. Timing feature only works if you are in the EST timezone
-  2. If item is never found in store it will not stop refereshing. This exists because the bot is normally run a few seconds before a drop where items are not yet updated. 
+  1. If item is never found in store it will not stop refereshing. This exists because the bot is normally run a few seconds before a drop where items are not yet updated. 
