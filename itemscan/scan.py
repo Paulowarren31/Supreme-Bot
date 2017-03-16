@@ -4,8 +4,9 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import json
+import time
 
-url = 'http://www.supremenewyork.com/shop/all'
+url = 'http://www.supremenewyork.com/shop/all/shorts'
 content = urlopen(url).read()
 soup = BeautifulSoup(content, 'html.parser')
 
@@ -37,6 +38,9 @@ for img in soup.find_all('img'):
     print('found new item ' + title + ' ' + color)
     add_c += 1
     data['items'].append(item)
+  else:
+    print('no new item')
+  time.sleep(5)
 
 with open('items.json', 'w') as f:
   if(add_c != 0):

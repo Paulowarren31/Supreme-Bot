@@ -22,7 +22,7 @@ chrome.storage.sync.get(get, function(res) {
 
   if(res.buy_auto){
     //warning if buy_auto on this will finish payment
-    //$('[name="commit"]').click()
+    $('[name="commit"]').click()
   }
   chrome.runtime.sendMessage({type: "off"}, function(res){});
 

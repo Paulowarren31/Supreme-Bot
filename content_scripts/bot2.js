@@ -13,8 +13,8 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
 
   if(size_choice != res.sizes.length){
     //get val of correct select option
-    val = $('#size option').filter(function () { 
-      return $(this).html() == res.sizes[size_choice]; 
+    val = $('#size option').filter(function () {
+      return $(this).html() == res.sizes[size_choice];
     }).val();
 
     $("#size").val(val).change();
@@ -24,20 +24,26 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
     $("#add-remove-buttons :input")[0].click();
   }
 
-  var img_codes = res.working_codes;
-  img_codes.pop();
+  var add = false;
+  $('#cctrl').bind("DOMNodeInserted", function(e){
+    if(add) return
+    add = true;
+    var img_codes = res.working_codes;
+    img_codes.pop();
 
-  chrome.storage.sync.set({
-    working_codes: img_codes
-  }, function(){
+    chrome.storage.sync.set({
+      working_codes: img_codes
+    }, function(){
 
-    var type = ''
-    if(img_codes.length == 0) type = 'done'
-    else type = 'keep_going'
+      var type = ''
+      if(img_codes.length == 0) type = 'done'
+      else type = 'keep_going'
 
-    setTimeout(function(){
-      chrome.runtime.sendMessage({type: type});
-    }, 400)
+      setTimeout(function(){
+        chrome.runtime.sendMessage({type: type});
+      }, 200)
+
+    })
 
   })
 });
