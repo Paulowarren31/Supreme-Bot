@@ -17,7 +17,7 @@ chrome.storage.sync.get(get, function(res) {
   $('#cnb').val(res.card_number);
   $('#credit_card_month').val(res.exp_mon);
   $('#credit_card_year').val(res.exp_yr);
-  $('#vval').val(res.cvv);
+  $('#cvw').val(res.cvv);
   $('.iCheck-helper')[1].click();
 
   if(res.buy_auto){
