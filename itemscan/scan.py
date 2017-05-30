@@ -6,17 +6,20 @@ from urllib.request import urlopen
 import json
 import time
 
-url = 'http://www.supremenewyork.com/shop/all/shorts'
+url = 'http://www.supremenewyork.com/shop/all'
 content = urlopen(url).read()
 soup = BeautifulSoup(content, 'html.parser')
 
 with open('items.json', 'r') as f:
+  print(f)
   data = json.load(f)
+  print('loaded')
 
 add_c = 0
 print('starting scan')
 for img in soup.find_all('img'):
   link = img.parent.get('href')
+  print(link)
   url = 'http://www.supremenewyork.com' + link
 
   specific_content = urlopen(url)
@@ -33,6 +36,7 @@ for img in soup.find_all('img'):
       'color': color,
       'alt': alt
       }
+  print(title)
 
   if item not in data['items']:
     print('found new item ' + title + ' ' + color)
