@@ -87,7 +87,7 @@ function init() {
     //load json with items
 
     var request = new XMLHttpRequest()
-    request.open('GET', 'https://supremejson.000webhostapp.com/items.json', true)
+    request.open('GET', 'http://52.56.134.212/items.json', true)
 
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
