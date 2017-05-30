@@ -12,5 +12,6 @@
   3. Added option to let bot click final checkout
 # 1.3 update
   1. Added UK support, new style to popup
-# Known Bugs
-  1. If item is never found in store it will not stop refereshing. This exists because the bot is normally run a few seconds before a drop where items are not yet updated. 
+
+# 1.8 update
+  1. Launched new server to pull itemcodes from UK automatically every Thursday morning.
