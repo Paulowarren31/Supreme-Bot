@@ -87,11 +87,13 @@ function init() {
     //load json with items
 
     var request = new XMLHttpRequest()
-    request.open('GET', 'http://52.56.134.212/items.json', true)
+    request.open('GET', 'http://ec2-52-56-134-212.eu-west-2.compute.amazonaws.com/items.json', true)
 
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
         var json = JSON.parse(request.responseText).items
+        var latest = JSON.parse(request.responseText).update_time
+        $('#lu').text(latest)
         display_items(json)
 
         //update added items

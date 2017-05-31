@@ -3,10 +3,11 @@
 
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+from datetime import datetime
 import json
 import time
 
-url = 'http://www.supremenewyork.com/shop/all'
+url = 'http://www.supremenewyork.com/shop/all/hats'
 content = urlopen(url).read()
 soup = BeautifulSoup(content, 'html.parser')
 
@@ -19,7 +20,6 @@ add_c = 0
 print('starting scan')
 for img in soup.find_all('img'):
   link = img.parent.get('href')
-  print(link)
   url = 'http://www.supremenewyork.com' + link
 
   specific_content = urlopen(url)
@@ -36,7 +36,6 @@ for img in soup.find_all('img'):
       'color': color,
       'alt': alt
       }
-  print(title)
 
   if item not in data['items']:
     print('found new item ' + title + ' ' + color)
@@ -48,6 +47,7 @@ for img in soup.find_all('img'):
 
 with open('items.json', 'w') as f:
   if(add_c != 0):
+    data['update_time'] = datetime.now().strftime("%B %d, %H:%M %p")
     json.dump(data, f)
     print('Scan finished, found ' + str(add_c) + ' new items and saved them')
   else:
