@@ -124,7 +124,7 @@ function display_items(items){
     item = document.createElement('li')
     item.classList.add('list-group-item')
     btn = '<button id="'+i.alt+'" type="button" class="btn btn-sm btn-primary float-sm-right">add</button>'
-    item.innerHTML = i.title + '\t' + i.color + '\t' + i.alt + '\t' + btn
+    item.innerHTML = i.title + '\t' + i.color + '\t' + btn
 
     item_list.appendChild(item)
 

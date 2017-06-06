@@ -4,13 +4,13 @@
     <head>
         <title>Settings</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
-        <script src="../jquery.js"></script>
+        <script src="../static/jquery.js"></script>
 
         <style>
-            @font-face{
-                font-family: font;
-                src: url(../sup.woff);
-            }
+@font-face{
+    font-family: font;
+    src: url(../static/sup.woff);
+}
             h1{
                 font-family: font;
                 font-weight: bold;
@@ -22,10 +22,34 @@
 
     </head>
 
-    <body style="padding-top: 40px; background: url('../worn_dots.png')">
+    <body style="padding-top: 40px; background: url('../static/worn_dots.png')">
         <div class="container">
             <div class="card" style="border-color: #a9a9a9;">
-                <h1 class="card-header"> Settings </h1>
+                <div class="card-header">
+                    <h1 style="display: inline;"> Settings </h1>
+                    <form style="float: right;" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+
+                        <!-- Identify your business so that you can collect the payments. -->
+                        <input type="hidden" name="business"
+                                             value="hearthstoneman123@gmail.com">
+
+                        <!-- Specify a Donate button. -->
+                        <input type="hidden" name="cmd" value="_donations">
+
+                        <!-- Specify details about the contribution -->
+                        <input type="hidden" name="item_name" value="The Free Supreme Bot">
+                        <input type="hidden" name="item_number" value="Donation Support">
+                        <input type="hidden" name="currency_code" value="USD">
+
+                        <!-- Display the payment button. -->
+                        <input type="image" name="submit"
+                                            src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png"
+                                            alt="Donate">
+                        <img alt="" width="1" height="1"
+                                              src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >
+
+                    </form>
+                </div>
                 <div class="card-block">
                     <div class="row">
                         <div class="form-group">
