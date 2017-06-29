@@ -1,4 +1,3 @@
-
 self.onmessage = function (msg){
   waiting = msg.data.waiting
   next_drop = nextDay(4)
