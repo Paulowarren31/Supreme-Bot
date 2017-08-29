@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Free Supreme Bot",
-  "version": "2.4",
+  "version": "2.5",
   "description": "use supreme item codes to get items on the drop day. Also has a timing feature.",
   "options_page": "options/options.html",
   "icons": {
@@ -9,16 +9,16 @@
   },
   "content_scripts": [{
     "matches": ["*://www.supremenewyork.com/shop/all"],
-    "js": ["static/jquery.js", "content_scripts/bot.js"],
+    "js": ["static/jquery.js", "content_scripts/selection.js"],
     "run_at": "document_end"
   }, {
     "matches": ["*://www.supremenewyork.com/shop/*"],
     "exclude_globs": ["*all*", "*cart*"],
-    "js": ["static/jquery.js", "content_scripts/bot2.js"],
+    "js": ["static/jquery.js", "content_scripts/size.js"],
     "run_at": "document_end"
   }, {
     "matches": ["*://www.supremenewyork.com/checkout"],
-    "js": ["static/jquery.js", "content_scripts/bot3.js"],
+    "js": ["static/jquery.js", "content_scripts/cart.js"],
     "run_at": "document_end"
   }],
 

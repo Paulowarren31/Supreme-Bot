@@ -3,7 +3,8 @@
 chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
 
   size_choice = 0
-  while($('#size option').filter(function(){
+  while($('select option').filter(function(){
+    console.log($(this).text())
     return $(this).text() == res.sizes[size_choice]
   }).length == 0){
     if(size_choice == res.sizes.length) break; //found no sizes we chose :(
@@ -13,11 +14,12 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
 
   if(size_choice != res.sizes.length){
     //get val of correct select option
-    val = $('#size option').filter(function () {
+    val = $('select option').filter(function () {
       return $(this).html() == res.sizes[size_choice];
     }).val();
 
-    $("#size").val(val).change();
+
+    $("select").val(val).change();
     $("#add-remove-buttons :input")[0].click();
   }
   else if($('#size').attr('type') == 'hidden'){
