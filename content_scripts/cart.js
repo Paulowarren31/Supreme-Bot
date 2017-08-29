@@ -1,7 +1,7 @@
 $(function(){
   //we are in /checkout
 
-  var get = ['name', 'email', 'phone', 'address', 'zip', 'city', 'state', 'country',
+  var get = ['name', 'email', 'phone', 'address', 'address2', 'zip', 'city', 'state', 'country',
     'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto', 'running'];
 
   chrome.storage.sync.get(get, res => {
@@ -12,6 +12,7 @@ $(function(){
     $('#order_email').val(res.email);
     $('#order_tel').val(res.phone);
     $('#bo').val(res.address);
+    $('#oba3').val(res.address2);
     $('#order_billing_zip').val(res.zip);
     $('#order_billing_city').val(res.city);
     $('#order_billing_state').val(res.state);

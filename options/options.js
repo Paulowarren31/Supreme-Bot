@@ -5,6 +5,7 @@ function save_options() {
   var email = document.getElementById('email').value;
   var phone = document.getElementById('phone').value;
   var address = document.getElementById('address').value;
+  var address2 = document.getElementById('address-2').value;
   var zip = document.getElementById('zip').value;
   var city = document.getElementById('city').value;
   var state = document.getElementById('state').value;
@@ -25,6 +26,7 @@ function save_options() {
     email: email,
     phone: phone,
     address: address,
+    address2: address2,
     zip: zip,
     city: city,
     state: state,
@@ -54,6 +56,7 @@ function init() {
     email: '',
     phone: '',
     address: '',
+    address2: '',
     zip: '',
     city: '',
     state: '',
@@ -73,6 +76,7 @@ function init() {
     document.getElementById('email').value = items.email;
     document.getElementById('phone').value = items.phone;
     document.getElementById('address').value = items.address;
+    document.getElementById('address-2').value = items.address2;
     document.getElementById('zip').value = items.zip;
     document.getElementById('city').value = items.city;
     document.getElementById('state').value = items.state;
@@ -178,6 +182,7 @@ function hasClass(id, className){
   list = elt.classList.value.split(' ')
   return list.indexOf(className) > -1
 }
+
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('save').addEventListener('click', save_options);
 
