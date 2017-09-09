@@ -5,7 +5,6 @@ $(function(){
     'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto', 'running'];
 
   chrome.storage.sync.get(get, res => {
-    console.log(res)
 
     //billing and shipping
     $('#order_billing_name').val(res.name);
@@ -20,10 +19,15 @@ $(function(){
 
 
     $('#credit_card_type').val(res.card_type);
-    $('input:eq(12)').val(res.card_number);
+    cc_input = $( "div:contains('number')", ".string", ".required" )[0].nextSibling
+    $(cc_input).val(res.card_number)
+
     $('#credit_card_month').val(res.exp_mon);
     $('#credit_card_year').val(res.exp_yr);
-    $('input:eq(13)').val(res.cvv);
+
+    cvv_input = $( "label:contains('CVV')", ".string", ".required" )[0].nextSibling 
+    $(cvv_input).val(res.cvv);
+
     $('.iCheck-helper')[1].click();
 
     if(res.buy_auto){

@@ -5,9 +5,9 @@ time_left = -1
 
 worker = new Worker('worker.js')
 
-chrome.runtime.onMessage.addListener(function(r, s, res) {
+chrome.runtime.onMessage.addListener(function(r, s, sendResponse) {
   if (r.type == "check"){
-    res({waiting: waiting, running: running, state: current_state, time_until: time_left});
+    sendResponse({waiting: waiting, running: running, state: current_state, time_until: time_left});
   }
   if (r.type == "url") {
     goToItem(r.url);
@@ -27,6 +27,27 @@ chrome.runtime.onMessage.addListener(function(r, s, res) {
   }
   if (r.type == "off") {
     running = false;
+  }
+  if (r.type == "addCode"){
+    chrome.storage.sync.get("img_codes", res => {
+      if(!res.img_codes.includes(r.code)){
+        res.img_codes.push(r.code)
+
+
+        chrome.storage.sync.set({
+          img_codes: res.img_codes
+        }, () => { console.log('updated image code')}
+        )
+      }
+      else console.log('added code')
+    })
+  }
+  if(r.type == "getCodes"){
+    chrome.storage.sync.get("img_codes", sync => {
+      console.log(sync)
+      sendResponse({codes: sync.img_codes})
+    })
+    return true;
   }
 })
 
