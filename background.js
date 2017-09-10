@@ -51,6 +51,18 @@ chrome.runtime.onMessage.addListener(function(r, s, sendResponse) {
   }
 })
 
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    if (request) {
+      if (request.message) {
+        if (request.message == "version") {
+          sendResponse({version: 1.0});
+        }
+      }
+    }
+    return true;
+  });
+
 function search() {
   if(!running) return;
   var url = "http://www.supremenewyork.com/shop/all"

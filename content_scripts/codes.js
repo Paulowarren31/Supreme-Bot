@@ -1,9 +1,11 @@
+alert('asd')
 window.addEventListener("message", function(event) {
   // We only accept messages from ourselves
   if (event.source != window)
     return;
 
   if (event.data.type && (event.data.type == "FROM_PAGE")) {
+    alert('got boys')
     let code = event.data.code
     chrome.runtime.sendMessage({type: "addCode", code: code}, function(res){});
   }

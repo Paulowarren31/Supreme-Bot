@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Free Supreme Bot",
-  "version": "2.9",
+  "version": "2.91",
   "description": "use supreme item codes to get items on the drop day. Also has a timing feature.",
   "options_page": "options/options.html",
   "icons": {
@@ -21,10 +21,13 @@
     "js": ["static/jquery.js", "content_scripts/cart.js"],
     "run_at": "document_end"
   }, {
-    "matches": ["http://localhost:8000/"],
+    "matches": ["*://*.supremecodes.com/"],
     "js": ["static/jquery.js", "content_scripts/codes.js"],
     "run_at": "document_end"
   }],
+  "externally_connectable": {
+    "matches": ["*://*.supremecodes.com/"]
+  },
 
   "permissions": [
     "tabs",
