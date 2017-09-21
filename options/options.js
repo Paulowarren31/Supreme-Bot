@@ -91,7 +91,7 @@ function init() {
     //load json with items
 
     var request = new XMLHttpRequest()
-    request.open('GET', 'http://ec2-52-56-173-67.eu-west-2.compute.amazonaws.com/items.json', true)
+    request.open('GET', 'http://35.176.176.197/items.json', true)
 
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
@@ -107,7 +107,7 @@ function init() {
           code = code_arr[code]
           elt = document.getElementById(code)
 
-          elt.classList.remove('btn-primary')
+          elt.classList.remove('btn-dark')
           elt.classList.add('btn-success')
           elt.innerHTML = 'added'
         }
@@ -127,7 +127,7 @@ function display_items(items){
     i = items[i]
     item = document.createElement('li')
     item.classList.add('list-group-item')
-    btn = '<button id="'+i.alt+'" type="button" class="btn btn-sm btn-primary float-sm-right">add</button>'
+    btn = '<button id="'+i.alt+'" type="button" class="btn btn-sm btn-dark float-sm-right">add</button>'
     item.innerHTML = i.title + '\t' + i.color + '\t' + btn
 
     item_list.appendChild(item)
@@ -144,8 +144,8 @@ function display_items(items){
 function toggleBtn(id){
   elt = document.getElementById(id)
   //we just added this, change to blue
-  if(hasClass(id, 'btn-primary')){
-    elt.classList.remove('btn-primary')
+  if(hasClass(id, 'btn-dark')){
+    elt.classList.remove('btn-dark')
     elt.classList.add('btn-success')
     elt.innerHTML = 'added'
 
@@ -158,7 +158,7 @@ function toggleBtn(id){
   }
   else{
     elt.classList.remove('btn-success')
-    elt.classList.add('btn-primary')
+    elt.classList.add('btn-dark')
     elt.innerHTML = 'add'
 
     codes = document.getElementById('img_codes')
