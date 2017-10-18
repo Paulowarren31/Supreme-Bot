@@ -58,6 +58,23 @@ chrome.runtime.onMessageExternal.addListener(
         if (request.message == "version") {
           sendResponse({version: 1.0});
         }
+        if (request.message == "addItem"){
+          let new_code = request.data
+          chrome.storage.sync.get('img_codes', (res) => {
+            if(res.img_codes.length > 0 && res.img_codes[0] != ''){
+              new_list = res.img_codes
+              new_list.push(new_code)
+            }
+            else{
+              new_list = [new_code]
+            }
+            chrome.storage.sync.set({
+              img_codes: new_list
+            }, () => {
+              sendResponse({})
+            })
+          })
+        }
       }
     }
     return true;
