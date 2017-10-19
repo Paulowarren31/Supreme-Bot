@@ -58,21 +58,40 @@ chrome.runtime.onMessageExternal.addListener(
         if (request.message == "version") {
           sendResponse({version: 1.0});
         }
+        if (request.message == "checkItem" ){
+          chrome.storage.sync.get('img_codes', (res) => {
+              let code = request.data
+              sendResponse({added: res.img_codes.includes(code)})
+          })
+        }
         if (request.message == "addItem"){
           let new_code = request.data
           chrome.storage.sync.get('img_codes', (res) => {
-            if(res.img_codes.length > 0 && res.img_codes[0] != ''){
-              new_list = res.img_codes
-              new_list.push(new_code)
+            let img_codes = res.img_codes
+            let new_list = []
+            let button_text = ''
+            if (img_codes.includes(new_code)){
+              button_text = 'Add Item'
+              let idx = img_codes.indexOf(new_code)
+              img_codes.splice(idx, 1);
+              new_list = img_codes
             }
-            else{
-              new_list = [new_code]
+            else {
+              button_text = 'Remove Item'
+              if(img_codes.length > 0 && img_codes[0] != ''){
+                new_list = img_codes
+                new_list.push(new_code)
+              }
+              else{
+                new_list = [new_code]
+              }
             }
             chrome.storage.sync.set({
               img_codes: new_list
             }, () => {
-              sendResponse({})
+              sendResponse({button_text: button_text})
             })
+
           })
         }
       }
