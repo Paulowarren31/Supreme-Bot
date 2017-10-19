@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Free Supreme Bot",
-  "version": "3.0",
+  "version": "3.01",
   "description": "use supreme item codes to get items on the drop day. Also has a timing feature.",
   "options_page": "options/options.html",
   "icons": {

@@ -189,7 +189,7 @@ document.getElementById('save').addEventListener('click', save_options);
 
 $(function(){
   jQuery.expr[':'].icontains = function(a, i, m) {
-  return jQuery(a).text().toUpperCase()
+    return jQuery(a).text().toUpperCase()
       .indexOf(m[3].toUpperCase()) >= 0;
   };
 
@@ -197,6 +197,22 @@ $(function(){
     item = e.target.value
     $('#item-list > li:not(:icontains('+item+'))').hide();
     $('#item-list > li:icontains('+item+')').show();
+  })
+
+  chrome.storage.sync.get('notification', res => {
+    if(res.notification == undefined){
+      new Noty({
+        text: '<div style="text-align: center;"><h3> Good news everyone! </h3> <img style="width: 180px; height: 90px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Canada_%28Pantone%29.svg/1200px-Flag_of_Canada_%28Pantone%29.svg.png"><br>Canadadian users can now checkout.<br><small>sorry it took so long</small></div>',
+
+        callbacks: {
+          onClose: function () {
+            chrome.storage.sync.set({ notification: false})
+          },
+        }
+      }).show();
+
+
+    }
   })
 
 
