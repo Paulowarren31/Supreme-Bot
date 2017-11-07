@@ -91,7 +91,7 @@ function init() {
     //load json with items
 
     var request = new XMLHttpRequest()
-    request.open('GET', 'http://ec2-35-176-87-154.eu-west-2.compute.amazonaws.com/items.json', true)
+    request.open('GET', 'http://ec2-35-176-87-154.eu-west-2.compute.amazonaws.com/items.json?_=' + new Date().getTime(), true)
 
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
@@ -210,11 +210,6 @@ $(function(){
           },
         }
       }).show();
-
-
     }
   })
-
-
 })
-
