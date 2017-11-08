@@ -9,23 +9,25 @@ chrome.storage.sync.get(['working_codes', 'sizes'], function(res){
   }
 
   else{
-    let size_choice = 0
-    while($('select option').filter(() => {
-      console.log($(this).text())
-      return $(this).text() == res.sizes[size_choice]
-    }).length == 0){
-      if(size_choice == res.sizes.length) break; //found no sizes we chose :(
-      size_choice++;
-    }
+    let size_choice = ''
+    let select_idx = 0
+    let found_size = false
+    let size_options = $('select option')
 
-    if(size_choice != res.sizes.length){
-      //get val of correct select option
-      val = $('select option').filter(() => {
-        return $(this).html() == res.sizes[size_choice];
-      }).val();
+    res.sizes.forEach( (size) => {
+      for (let i = 0; i < size_options.length; i++){
+        let select_text = $(size_options[i]).text()
+        if (!found_size && size == select_text){
+          select_idx = i
+          size_choice = size
+          found_size = true
+        }
+      }
+    })
 
-
-      $("select").val(val).change();
+    if(found_size){
+      let select = document.getElementsByTagName('select')[0]
+      select.selectedIndex = select_idx
       $("#add-remove-buttons :input")[0].click();
     }
   }
