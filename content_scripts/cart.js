@@ -1,10 +1,11 @@
 //we are in /checkout
 
 var get = ['name', 'email', 'phone', 'address', 'address2', 'zip', 'city', 'state', 'country',
-  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto', 'running'];
+  'card_type', 'card_number', 'exp_mon', 'exp_yr', 'cvv', 'buy_auto', 'running', 'checkout_delay'];
 
 chrome.storage.sync.get(get, res => {
 
+  setTimeout( () => {
   //billing and shipping
   $('#order_billing_name').val(res.name);
   $('#order_email').val(res.email);
@@ -20,8 +21,8 @@ chrome.storage.sync.get(get, res => {
   $('#order_billing_state').val(res.state);
 
   $('#credit_card_type').val(res.card_type);
-  cc_input = $( "#cnb")
-  $(cc_input).val(res.card_number)
+
+  $('label:contains(number)').next().val(res.card_number)
 
   $('#credit_card_month').val(res.exp_mon);
   $('#credit_card_year').val(res.exp_yr);
@@ -40,5 +41,6 @@ chrome.storage.sync.get(get, res => {
     $('[name="commit"]').click()
   }
   chrome.runtime.sendMessage({type: "off"}, function(res){});
+  }, parseInt(res.checkout_delay) * 1000);
 
 });

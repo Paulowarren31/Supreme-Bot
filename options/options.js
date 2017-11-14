@@ -15,6 +15,7 @@ function save_options() {
   var exp_mon = document.getElementById('exp-mon').value;
   var exp_yr = document.getElementById('exp-yr').value;
   var cvv = document.getElementById('cvv').value;
+  var checkout_delay = document.getElementById('checkout_delay').value;
 
   var buy_auto = document.getElementById('auto').checked;
 
@@ -37,6 +38,7 @@ function save_options() {
     exp_yr: exp_yr,
     cvv: cvv,
     buy_auto: buy_auto,
+    checkout_delay: checkout_delay,
     running: false
 
   }, function() {
@@ -66,6 +68,7 @@ function init() {
     exp_mon: '',
     exp_yr: '',
     cvv: '',
+    checkout_delay: '0',
     buy_auto: false,
     running: false
 
@@ -87,6 +90,7 @@ function init() {
     document.getElementById('exp-yr').value = items.exp_yr;
     document.getElementById('cvv').value = items.cvv;
     document.getElementById('auto').checked = items.buy_auto;
+    document.getElementById('checkout_delay').value = items.checkout_delay;
 
     //load json with items
 
