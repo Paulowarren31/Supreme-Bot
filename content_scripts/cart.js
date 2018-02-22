@@ -22,7 +22,7 @@ chrome.storage.sync.get(get, res => {
 
   $('#credit_card_type').val(res.card_type);
 
-  $('label:contains(number)').next().val(res.card_number)
+  $('div:contains(number)').next().val(res.card_number)
 
   $('#credit_card_month').val(res.exp_mon);
   $('#credit_card_year').val(res.exp_yr);
@@ -31,7 +31,7 @@ chrome.storage.sync.get(get, res => {
     $('#order_billing_country').change()
   }, 2000)
 
-  cvv_input = $( "label:contains('CVV')", ".string", ".required" )[0].nextSibling
+  cvv_input = $( "div:contains('CVV')", ".string", ".required" )[0].nextSibling
   $(cvv_input).val(res.cvv);
 
   $('.iCheck-helper')[1].click();
