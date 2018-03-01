@@ -190,8 +190,17 @@ function hasClass(id, className){
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('save').addEventListener('click', save_options);
 
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-114925064-1']);
+_gaq.push(['_trackPageview']);
+
 
 $(function(){
+
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
   jQuery.expr[':'].icontains = function(a, i, m) {
     return jQuery(a).text().toUpperCase()
       .indexOf(m[3].toUpperCase()) >= 0;
@@ -216,4 +225,5 @@ $(function(){
       }).show();
     }
   })
+
 })
