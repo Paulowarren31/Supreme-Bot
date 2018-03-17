@@ -95,12 +95,12 @@ function init() {
     //load json with items
 
     var request = new XMLHttpRequest()
-    request.open('GET', 'http://ec2-35-176-87-154.eu-west-2.compute.amazonaws.com/items.json?_=' + new Date().getTime(), true)
+    request.open('GET', 'https://4e6qoos5w0.execute-api.us-east-1.amazonaws.com/test?_=' + new Date().getTime(), true)
 
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
-        var json = JSON.parse(request.responseText).items
-        var latest = JSON.parse(request.responseText).update_time
+        var json = JSON.parse(request.responseText).Items
+        var latest = json[0].updateTime
         $('#lu').text(latest)
         display_items(json)
 
@@ -131,18 +131,42 @@ function display_items(items){
     i = items[i]
     item = document.createElement('li')
     item.classList.add('list-group-item')
-    btn = '<button id="'+i.alt+'" type="button" class="btn btn-sm btn-dark float-sm-right">add</button>'
+    btn = '<button id="'+i.itemCode+'" type="button" class="btn btn-sm btn-dark float-sm-right">add</button>'
     item.innerHTML = i.title + '\t' + i.color + '\t' + btn
 
     item_list.appendChild(item)
 
-    btn = document.getElementById(i.alt)
+    btn = document.getElementById(i.itemCode)
     btn.onclick = function(e) {
+      itemCode = e.target.id
 
       //togggle btn and update item list
-      toggleBtn(e.target.id)
+      toggleBtn(itemCode)
+      console.log('sending analytic info')
+      postData('https://yie3r47kbf.execute-api.us-east-1.amazonaws.com/test', {itemCode: itemCode})
+        .then(data => console.log(data)) // JSON from `response.json()` call
+        .catch(error => console.error(error))
     }
   }
+}
+
+
+function postData(url, data) {
+  // Default options are marked with *
+  return fetch(url, {
+    body: JSON.stringify(data), // must match 'Content-Type' header
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, same-origin, *omit
+    headers: {
+      'user-agent': 'Mozilla/4.0 MDN Example',
+      'content-type': 'application/json'
+    },
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, cors, *same-origin
+    redirect: 'follow', // *manual, follow, error
+    referrer: 'no-referrer', // *client, no-referrer
+  })
+  .then(response => response.json()) // parses response to JSON
 }
 
 function toggleBtn(id){
@@ -203,17 +227,4 @@ $(function(){
     $('#item-list > li:icontains('+item+')').show();
   })
 
-  chrome.storage.sync.get('notification', res => {
-    if(res.notification == undefined){
-      new Noty({
-        text: '<div style="text-align: center;"><h3> Good news everyone! </h3> <img style="width: 180px; height: 90px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Canada_%28Pantone%29.svg/1200px-Flag_of_Canada_%28Pantone%29.svg.png"><br>Canadadian users can now checkout.<br><small>sorry it took so long</small></div>',
-
-        callbacks: {
-          onClose: function () {
-            chrome.storage.sync.set({ notification: false})
-          },
-        }
-      }).show();
-    }
-  })
 })
