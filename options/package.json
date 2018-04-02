@@ -1,0 +1,23 @@
+{
+  "name": "supreme_options",
+  "version": "1.0.0",
+  "description": "supreme options page",
+  "main": "options.js",
+  "author": "Paulo Warren",
+  "license": "MIT",
+  "scripts": {
+  },
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "material-ui": "^1.0.0-beta.38",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "webpack": "==3.6.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^2.0.13"
+  }
+}
