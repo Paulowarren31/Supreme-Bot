@@ -100,8 +100,18 @@ function init() {
     request.onload = function(){
       if (request.status >= 200 && request.status < 400){
         var json = JSON.parse(request.responseText).Items
-        var latest = json[0].updateTime
-        $('#lu').text(latest)
+
+        newest = new Date(0)
+        new_str = ''
+        for (let item of json){
+          d = new Date(item.updateTime.slice(0, 8));
+          if (d > newest) {
+            newest = d
+            new_str = item.updateTime;
+          }
+        }
+
+        $('#lu').text(new_str)
         display_items(json)
 
         //update added items

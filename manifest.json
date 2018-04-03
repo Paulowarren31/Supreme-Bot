@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Free Supreme Bot",
   "author": "Paulo Warren",
-  "version": "3.41",
+  "version": "3.42",
   "description": "Quickly buy items on supremenewyork.com. Select the newest items, fill in your information, and let the extension do the rest.",
   "options_page": "options/options.html",
   "icons": {
