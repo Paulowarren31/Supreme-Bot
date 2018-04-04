@@ -1,20 +1,24 @@
 import React from 'react';
 
-class Item extends React.Component {
-    constructor(props){
-        super(props)
-    }
-    render(){
-        return (
-            <div>
-                <div>{this.props.name}</div>
-                <div>{this.props.color}</div>
+import {
+  Media,
+  Row,
+  Col
+} from 'react-bootstrap';
 
-                {/* optional, should only show up in user's added items */}
-                <div>{this.props.size}</div>
-            </div>
-        )
-    }
+class Item extends React.Component {
+  constructor(props){
+    super(props)
+
+
+  }
+  render(){
+    return (
+
+      this.props.src & this.props.shown ? <img style={{padding: '.2rem'}} height={98} width={98} src={'http://' + this.props.src} /> : null
+
+    )
+  }
 }
 
 export default Item;
