@@ -14,6 +14,7 @@ chrome.storage.sync.get(get, res => {
   $('#oba3').val(res.address2);
   $('#order_billing_zip').val(res.zip);
   $('#order_billing_city').val(res.city);
+
   let country = res.country;
   $('#order_billing_country').val(country);
   $("#state_label").text(country === 'USA' ? 'state' : 'province');
@@ -35,6 +36,7 @@ chrome.storage.sync.get(get, res => {
   $(cvv_input).val(res.cvv);
 
   $('#order_terms').click();
+  $('.iCheck-helper').click();
 
   if(res.buy_auto){
     //warning if buy_auto on this will finish payment
