@@ -5,8 +5,7 @@
   "main": "options.js",
   "author": "Paulo Warren",
   "license": "MIT",
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
