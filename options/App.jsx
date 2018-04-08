@@ -11,7 +11,7 @@ class App extends React.Component {
     return (
       <div style={{ paddingTop: "5%" }}>
       <Grid>
-        <div style={{ maxWidth: '1000px' }}>
+        <div style={{ maxWidth: '1000px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 
           <ItemList url="https://4e6qoos5w0.execute-api.us-east-1.amazonaws.com/test"></ItemList>
 

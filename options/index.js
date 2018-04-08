@@ -26618,7 +26618,7 @@ var App = function (_React$Component) {
           null,
           _react2.default.createElement(
             'div',
-            { style: { maxWidth: '1000px' } },
+            { style: { maxWidth: '1000px', display: 'flex', flexDirection: 'column', alignItems: 'center' } },
             _react2.default.createElement(_item_list2.default, { url: 'https://4e6qoos5w0.execute-api.us-east-1.amazonaws.com/test' }),
             _react2.default.createElement(_checkout_info2.default, null)
           )
@@ -26687,7 +26687,17 @@ var ItemList = function (_React$Component) {
         if (!res.ok) throw Error(res.statusText);
         return res.json();
       }).then(function (data) {
-        console.log(data);
+        data.Items.forEach(function (item) {
+          item.shown = true;
+        });
+        console.log(data.Items);
+        data.Items.sort(function (a, b) {
+          if (a.title < b.title) {
+            return 1;
+            return -1;
+          }
+        });
+        console.log(data.Items);
         _this2.setState({
           items: data.Items,
           loaded: true
@@ -26695,14 +26705,34 @@ var ItemList = function (_React$Component) {
       });
     }
   }, {
+    key: 'handleChange',
+    value: function handleChange(event) {
+      var _this3 = this;
+
+      var searchText = event.target.value.toLowerCase();
+      this.setState({
+        searchText: searchText
+      }, function () {
+        // filter items
+        var new_items = _this3.state.items;
+        new_items.forEach(function (item) {
+          item.shown = item.title.toLowerCase().indexOf(_this3.state.searchText) != -1;
+        });
+        _this3.setState({
+          items: new_items
+        });
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var blockStyle = {
-        color: 'white',
-        backgroundColor: '#173f62',
         display: 'flex',
         justifyContent: 'space-around',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        overflowY: 'auto',
+        height: '700px',
+        marginTop: '2rem'
       };
       if (!this.state.loaded) {
         return _react2.default.createElement(
@@ -26711,15 +26741,25 @@ var ItemList = function (_React$Component) {
           'loading'
         );
       } else {
-        console.log(this.state.items);
         return _react2.default.createElement(
-          _reactBootstrap.Row,
-          null,
+          'div',
+          { style: { width: '700px', marginBottom: '1.5rem' } },
           _react2.default.createElement(
-            'div',
-            { 'class': 'container card card-block', style: blockStyle },
+            _reactBootstrap.ControlLabel,
+            { style: { marginTop: '1rem' } },
+            'Search Items'
+          ),
+          _react2.default.createElement(_reactBootstrap.FormControl, {
+            id: 'item',
+            type: 'text',
+            value: this.state.searchText,
+            placeholder: '',
+            onChange: this.handleChange.bind(this) }),
+          _react2.default.createElement(
+            _reactBootstrap.Row,
+            { style: blockStyle, id: 'scroll' },
             this.state.items.map(function (item, i) {
-              return _react2.default.createElement(_item2.default, { name: item.title, color: item.color, code: item.itemCode, src: item.src, key: i });
+              return _react2.default.createElement(_item2.default, { name: item.title, color: item.color, code: item.itemCode, src: item.src, shown: item.shown, key: i });
             })
           )
         );
@@ -26771,7 +26811,7 @@ var Item = function (_React$Component) {
   _createClass(Item, [{
     key: 'render',
     value: function render() {
-      return this.props.src ? _react2.default.createElement('img', { style: { padding: '.2rem' }, height: 98, width: 98, src: 'http://' + this.props.src }) : null;
+      return this.props.src && this.props.shown ? _react2.default.createElement('img', { style: { padding: '.2rem' }, height: 98, width: 98, src: 'http://' + this.props.src }) : null;
     }
   }]);
 
@@ -38864,7 +38904,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -38884,888 +38924,879 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Checkout = function (_React$Component) {
-    _inherits(Checkout, _React$Component);
+  _inherits(Checkout, _React$Component);
 
-    function Checkout(props) {
-        _classCallCheck(this, Checkout);
+  function Checkout(props) {
+    _classCallCheck(this, Checkout);
 
-        var _this = _possibleConstructorReturn(this, (Checkout.__proto__ || Object.getPrototypeOf(Checkout)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Checkout.__proto__ || Object.getPrototypeOf(Checkout)).call(this, props));
 
-        _this.state = {
-            info: {},
-            loaded: false
-        };
-        return _this;
+    _this.state = {
+      info: {},
+      loaded: false
+    };
+    return _this;
+  }
+
+  _createClass(Checkout, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      //get user info from chrome storage
+      chrome.storage.sync.get({
+        img_codes: '', sizes: '', name: '', email: '', phone: '',
+        address: '', address2: '', zip: '', city: '', state: '', country: '', card_type: '',
+        card_number: '', exp_mon: '', exp_yr: '', cvv: '', checkout_delay: '0', buy_auto: false
+      }, function (items) {
+        console.log(items);
+        _this2.setState({
+          info: items,
+          loaded: true
+        });
+      });
     }
-
-    _createClass(Checkout, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _this2 = this;
-
-            //get user info from chrome storage
-            chrome.storage.sync.get({
-                img_codes: '', sizes: '', name: '', email: '', phone: '',
-                address: '', address2: '', zip: '', city: '', state: '', country: '', card_type: '',
-                card_number: '', exp_mon: '', exp_yr: '', cvv: '', checkout_delay: '0', buy_auto: false
-            }, function (items) {
-                console.log(items);
-                _this2.setState({
-                    info: items,
-                    loaded: true
-                });
-            });
-        }
-    }, {
-        key: 'handleChange',
-        value: function handleChange(event, kek) {
-
-            var newState = this.state;
-            newState.info[event.target.id] = event.target.value;
-            this.setState(newState);
-            chrome.storage.sync.set(newState.info);
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var paperStyle = {
-                height: '500px',
-                padding: '1rem'
-            };
-            if (this.state.loaded) {
-                return _react2.default.createElement(
-                    _reactBootstrap.Grid,
+  }, {
+    key: 'handleChange',
+    value: function handleChange(event) {
+      var newState = this.state;
+      newState.info[event.target.id] = event.target.value;
+      this.setState(newState);
+      chrome.storage.sync.set(newState.info);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.state.loaded) {
+        return _react2.default.createElement(
+          _reactBootstrap.Grid,
+          { style: { width: '700px' } },
+          _react2.default.createElement(
+            _reactBootstrap.Row,
+            null,
+            _react2.default.createElement(
+              'div',
+              { className: 'card card-block' },
+              _react2.default.createElement(
+                _reactBootstrap.Col,
+                { xs: 12 },
+                _react2.default.createElement(
+                  'h1',
+                  null,
+                  ' Shipping Info '
+                )
+              ),
+              _react2.default.createElement(
+                _reactBootstrap.Col,
+                { xs: 6 },
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Full name'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'name',
+                  type: 'text',
+                  value: this.state.info.name,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                }),
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Email'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'email',
+                  type: 'text',
+                  value: this.state.info.email,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                })
+              ),
+              _react2.default.createElement(
+                _reactBootstrap.Col,
+                { xs: 6 },
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Phone Number'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'phone',
+                  type: 'text',
+                  value: this.state.info.phone,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                }),
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Address'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'address',
+                  type: 'text',
+                  value: this.state.info.address,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                })
+              ),
+              _react2.default.createElement(
+                _reactBootstrap.Col,
+                { xs: 6 },
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Address2'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'address2',
+                  type: 'text',
+                  value: this.state.info.address2,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                }),
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'City'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'city',
+                  type: 'text',
+                  value: this.state.info.City,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                })
+              ),
+              _react2.default.createElement(
+                _reactBootstrap.Col,
+                { xs: 6 },
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'State'
+                ),
+                _react2.default.createElement(
+                  _reactBootstrap.FormControl,
+                  {
+                    componentClass: 'select',
+                    id: 'state',
+                    placeholder: 'select',
+                    value: this.state.info.state,
+                    onChange: this.handleChange.bind(this)
+                  },
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'AL' },
+                    'Alabama'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'AK' },
+                    'Alaska'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'AZ' },
+                    'Arizona'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'AR' },
+                    'Arkansas'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'CA' },
+                    'California'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'CO' },
+                    'Colorado'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'CT' },
+                    'Connecticut'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'DE' },
+                    'Delaware'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'DC' },
+                    'District Of Columbia'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'FL' },
+                    'Florida'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'GA' },
+                    'Georgia'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'HI' },
+                    'Hawaii'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'ID' },
+                    'Idaho'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'IL' },
+                    'Illinois'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'IN' },
+                    'Indiana'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'IA' },
+                    'Iowa'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'KS' },
+                    'Kansas'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'KY' },
+                    'Kentucky'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'LA' },
+                    'Louisiana'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'ME' },
+                    'Maine'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MD' },
+                    'Maryland'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MA' },
+                    'Massachusetts'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MI' },
+                    'Michigan'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MN' },
+                    'Minnesota'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MS' },
+                    'Mississippi'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MO' },
+                    'Missouri'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MT' },
+                    'Montana'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NE' },
+                    'Nebraska'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NV' },
+                    'Nevada'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NH' },
+                    'New Hampshire'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NJ' },
+                    'New Jersey'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NM' },
+                    'New Mexico'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NY' },
+                    'New York'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NC' },
+                    'North Carolina'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'ND' },
+                    'North Dakota'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'OH' },
+                    'Ohio'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'OK' },
+                    'Oklahoma'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'OR' },
+                    'Oregon'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'PA' },
+                    'Pennsylvania'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'RI' },
+                    'Rhode Island'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'SC' },
+                    'South Carolina'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'SD' },
+                    'South Dakota'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'TN' },
+                    'Tennessee'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'TX' },
+                    'Texas'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'UT' },
+                    'Utah'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'VT' },
+                    'Vermont'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'VA' },
+                    'Virginia'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'WA' },
+                    'Washington'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'WV' },
+                    'West Virginia'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'WI' },
+                    'Wisconsin'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'WY' },
+                    'Wyoming'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'AB' },
+                    'AB'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'BC' },
+                    'BC'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MB' },
+                    'MB'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NB' },
+                    'NB'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NL' },
+                    'NL'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NT' },
+                    'NT'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NS' },
+                    'NS'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NU' },
+                    'NU'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'ON' },
+                    'ON'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'PE' },
+                    'PE'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'QC' },
+                    'QC'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'SK' },
+                    'SK'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'YT' },
+                    'YT'
+                  )
+                ),
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Country'
+                ),
+                _react2.default.createElement(
+                  _reactBootstrap.FormControl,
+                  {
+                    componentClass: 'select',
+                    id: 'country',
+                    placeholder: 'select',
+                    value: this.state.info.country,
+                    onChange: this.handleChange.bind(this)
+                  },
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'USA' },
+                    'US'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'CANADA' },
+                    'Canada'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'GB' },
+                    'UK'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NB' },
+                    'UK (N. IRELAND)'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'AT' },
+                    'AUSTRIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'BY' },
+                    'BELARUS'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'BE' },
+                    'BELGIUM'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'BG' },
+                    'BULGARIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'HR' },
+                    'CROATIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'CZ' },
+                    'CZECH REPUBLIC'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'DK' },
+                    'DENMARK'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'EE' },
+                    'ESTONIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'FI' },
+                    'FINLAND'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'FR' },
+                    'FRANCE'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'DE' },
+                    'GERMANY'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'GR' },
+                    'GREECE'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'HU' },
+                    'HUNGARY'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'IS' },
+                    'ICELAND'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'IE' },
+                    'IRELAND'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'IT' },
+                    'ITALY'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'LV' },
+                    'LATVIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'LT' },
+                    'LITHUANIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'LU' },
+                    'LUXEMBOURG'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'MC' },
+                    'MONACO'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NL' },
+                    'NETHERLANDS'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'NO' },
+                    'NORWAY'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'PL' },
+                    'POLAND'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'PT' },
+                    'PORTUGAL'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'RO' },
+                    'ROMANIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'RU' },
+                    'RUSSIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'SK' },
+                    'SLOVAKIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'SI' },
+                    'SLOVENIA'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'ES' },
+                    'SPAIN'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'SE' },
+                    'SWEDEN'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'CH' },
+                    'SWITZERLAND'
+                  ),
+                  _react2.default.createElement(
+                    'option',
+                    { value: 'TR' },
+                    'TURKEY'
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                _reactBootstrap.Col,
+                { xs: 6 },
+                _react2.default.createElement(
+                  _reactBootstrap.ControlLabel,
+                  { style: { marginTop: '1rem' } },
+                  'Zip'
+                ),
+                _react2.default.createElement(_reactBootstrap.FormControl, {
+                  id: 'zip',
+                  type: 'text',
+                  value: this.state.info.zip,
+                  placeholder: '',
+                  onChange: this.handleChange.bind(this)
+                })
+              )
+            )
+          ),
+          _react2.default.createElement(
+            _reactBootstrap.Row,
+            { style: { marginTop: '2rem' } },
+            _react2.default.createElement(
+              _reactBootstrap.Col,
+              { xs: 6 },
+              _react2.default.createElement(
+                'div',
+                { className: 'card card-block' },
+                _react2.default.createElement(
+                  _reactBootstrap.Col,
+                  { xs: 12 },
+                  _react2.default.createElement(
+                    'h1',
                     null,
+                    ' Credit Card Info '
+                  )
+                ),
+                _react2.default.createElement(
+                  _reactBootstrap.Col,
+                  { xs: 12 },
+                  _react2.default.createElement(
+                    _reactBootstrap.ControlLabel,
+                    { style: { marginTop: '1rem' } },
+                    'Card Number'
+                  ),
+                  _react2.default.createElement(_reactBootstrap.FormControl, {
+                    id: 'card_number',
+                    type: 'text',
+                    value: this.state.info.card_number,
+                    placeholder: '',
+                    onChange: this.handleChange.bind(this)
+                  })
+                ),
+                _react2.default.createElement(
+                  _reactBootstrap.Col,
+                  { xs: 6 },
+                  _react2.default.createElement(
+                    _reactBootstrap.ControlLabel,
+                    { style: { marginTop: '1rem' } },
+                    'Card Type'
+                  ),
+                  _react2.default.createElement(
+                    _reactBootstrap.FormControl,
+                    {
+                      componentClass: 'select',
+                      id: 'card_type',
+                      placeholder: 'select',
+                      value: this.state.info.card_type,
+                      onChange: this.handleChange.bind(this)
+                    },
                     _react2.default.createElement(
-                        'div',
-                        { style: { maxWidth: '1000px' } },
-                        _react2.default.createElement(
-                            _reactBootstrap.Row,
-                            null,
-                            _react2.default.createElement(
-                                'div',
-                                { 'class': 'card card-block', style: { color: 'white', backgroundColor: '#173f62' } },
-                                _react2.default.createElement(
-                                    _reactBootstrap.Col,
-                                    { xs: 12 },
-                                    _react2.default.createElement(
-                                        'h1',
-                                        null,
-                                        ' Shipping Info '
-                                    )
-                                ),
-                                _react2.default.createElement(
-                                    _reactBootstrap.Col,
-                                    { xs: 6 },
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Full name'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'name',
-                                        type: 'text',
-                                        value: this.state.info.name,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    }),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Email'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'email',
-                                        type: 'text',
-                                        value: this.state.info.email,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    })
-                                ),
-                                _react2.default.createElement(
-                                    _reactBootstrap.Col,
-                                    { xs: 6 },
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Phone Number'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'phone',
-                                        type: 'text',
-                                        value: this.state.info.phone,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    }),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Address'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'address',
-                                        type: 'text',
-                                        value: this.state.info.address,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    })
-                                ),
-                                _react2.default.createElement(
-                                    _reactBootstrap.Col,
-                                    { xs: 6 },
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Address2'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'address2',
-                                        type: 'text',
-                                        value: this.state.info.address2,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    }),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'City'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'city',
-                                        type: 'text',
-                                        value: this.state.info.City,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    })
-                                ),
-                                _react2.default.createElement(
-                                    _reactBootstrap.Col,
-                                    { xs: 6 },
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'State'
-                                    ),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.FormControl,
-                                        {
-                                            componentClass: 'select',
-                                            id: 'state',
-                                            placeholder: 'select',
-                                            value: this.state.info.state,
-                                            onChange: this.handleChange.bind(this)
-                                        },
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'AL' },
-                                            'Alabama'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'AK' },
-                                            'Alaska'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'AZ' },
-                                            'Arizona'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'AR' },
-                                            'Arkansas'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'CA' },
-                                            'California'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'CO' },
-                                            'Colorado'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'CT' },
-                                            'Connecticut'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'DE' },
-                                            'Delaware'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'DC' },
-                                            'District Of Columbia'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'FL' },
-                                            'Florida'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'GA' },
-                                            'Georgia'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'HI' },
-                                            'Hawaii'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'ID' },
-                                            'Idaho'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'IL' },
-                                            'Illinois'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'IN' },
-                                            'Indiana'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'IA' },
-                                            'Iowa'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'KS' },
-                                            'Kansas'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'KY' },
-                                            'Kentucky'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'LA' },
-                                            'Louisiana'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'ME' },
-                                            'Maine'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MD' },
-                                            'Maryland'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MA' },
-                                            'Massachusetts'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MI' },
-                                            'Michigan'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MN' },
-                                            'Minnesota'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MS' },
-                                            'Mississippi'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MO' },
-                                            'Missouri'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MT' },
-                                            'Montana'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NE' },
-                                            'Nebraska'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NV' },
-                                            'Nevada'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NH' },
-                                            'New Hampshire'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NJ' },
-                                            'New Jersey'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NM' },
-                                            'New Mexico'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NY' },
-                                            'New York'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NC' },
-                                            'North Carolina'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'ND' },
-                                            'North Dakota'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'OH' },
-                                            'Ohio'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'OK' },
-                                            'Oklahoma'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'OR' },
-                                            'Oregon'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'PA' },
-                                            'Pennsylvania'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'RI' },
-                                            'Rhode Island'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'SC' },
-                                            'South Carolina'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'SD' },
-                                            'South Dakota'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'TN' },
-                                            'Tennessee'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'TX' },
-                                            'Texas'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'UT' },
-                                            'Utah'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'VT' },
-                                            'Vermont'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'VA' },
-                                            'Virginia'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'WA' },
-                                            'Washington'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'WV' },
-                                            'West Virginia'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'WI' },
-                                            'Wisconsin'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'WY' },
-                                            'Wyoming'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'AB' },
-                                            'AB'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'BC' },
-                                            'BC'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MB' },
-                                            'MB'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NB' },
-                                            'NB'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NL' },
-                                            'NL'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NT' },
-                                            'NT'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NS' },
-                                            'NS'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NU' },
-                                            'NU'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'ON' },
-                                            'ON'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'PE' },
-                                            'PE'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'QC' },
-                                            'QC'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'SK' },
-                                            'SK'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'YT' },
-                                            'YT'
-                                        )
-                                    ),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Country'
-                                    ),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.FormControl,
-                                        {
-                                            componentClass: 'select',
-                                            id: 'country',
-                                            placeholder: 'select',
-                                            value: this.state.info.country,
-                                            onChange: this.handleChange.bind(this)
-                                        },
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'USA' },
-                                            'US'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'CANADA' },
-                                            'Canada'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'GB' },
-                                            'UK'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NB' },
-                                            'UK (N. IRELAND)'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'AT' },
-                                            'AUSTRIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'BY' },
-                                            'BELARUS'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'BE' },
-                                            'BELGIUM'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'BG' },
-                                            'BULGARIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'HR' },
-                                            'CROATIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'CZ' },
-                                            'CZECH REPUBLIC'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'DK' },
-                                            'DENMARK'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'EE' },
-                                            'ESTONIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'FI' },
-                                            'FINLAND'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'FR' },
-                                            'FRANCE'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'DE' },
-                                            'GERMANY'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'GR' },
-                                            'GREECE'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'HU' },
-                                            'HUNGARY'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'IS' },
-                                            'ICELAND'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'IE' },
-                                            'IRELAND'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'IT' },
-                                            'ITALY'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'LV' },
-                                            'LATVIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'LT' },
-                                            'LITHUANIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'LU' },
-                                            'LUXEMBOURG'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'MC' },
-                                            'MONACO'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NL' },
-                                            'NETHERLANDS'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'NO' },
-                                            'NORWAY'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'PL' },
-                                            'POLAND'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'PT' },
-                                            'PORTUGAL'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'RO' },
-                                            'ROMANIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'RU' },
-                                            'RUSSIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'SK' },
-                                            'SLOVAKIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'SI' },
-                                            'SLOVENIA'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'ES' },
-                                            'SPAIN'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'SE' },
-                                            'SWEDEN'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'CH' },
-                                            'SWITZERLAND'
-                                        ),
-                                        _react2.default.createElement(
-                                            'option',
-                                            { value: 'TR' },
-                                            'TURKEY'
-                                        )
-                                    )
-                                ),
-                                _react2.default.createElement(
-                                    _reactBootstrap.Col,
-                                    { xs: 6 },
-                                    _react2.default.createElement(
-                                        _reactBootstrap.ControlLabel,
-                                        { style: { marginTop: '1rem' } },
-                                        'Zip'
-                                    ),
-                                    _react2.default.createElement(_reactBootstrap.FormControl, {
-                                        id: 'zip',
-                                        type: 'text',
-                                        value: this.state.info.zip,
-                                        placeholder: '',
-                                        onChange: this.handleChange.bind(this)
-                                    })
-                                )
-                            )
-                        ),
-                        _react2.default.createElement(
-                            _reactBootstrap.Row,
-                            { style: { marginTop: '2rem' } },
-                            _react2.default.createElement(
-                                _reactBootstrap.Col,
-                                { xs: 6 },
-                                _react2.default.createElement(
-                                    'div',
-                                    { 'class': 'card card-block', style: { color: 'white', backgroundColor: '#173f62' } },
-                                    _react2.default.createElement(
-                                        _reactBootstrap.Col,
-                                        { xs: 12 },
-                                        _react2.default.createElement(
-                                            'h1',
-                                            null,
-                                            ' Credit Card Info '
-                                        )
-                                    ),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.Col,
-                                        { xs: 12 },
-                                        _react2.default.createElement(
-                                            _reactBootstrap.ControlLabel,
-                                            { style: { marginTop: '1rem' } },
-                                            'Card Number'
-                                        ),
-                                        _react2.default.createElement(_reactBootstrap.FormControl, {
-                                            id: 'card_number',
-                                            type: 'text',
-                                            value: this.state.info.card_number,
-                                            placeholder: '',
-                                            onChange: this.handleChange.bind(this)
-                                        })
-                                    ),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.Col,
-                                        { xs: 6 },
-                                        _react2.default.createElement(
-                                            _reactBootstrap.ControlLabel,
-                                            { style: { marginTop: '1rem' } },
-                                            'Card Type'
-                                        ),
-                                        _react2.default.createElement(
-                                            _reactBootstrap.FormControl,
-                                            {
-                                                componentClass: 'select',
-                                                id: 'card_type',
-                                                placeholder: 'select',
-                                                value: this.state.info.card_type,
-                                                onChange: this.handleChange.bind(this)
-                                            },
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: 'visa' },
-                                                'Visa'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: 'american_express' },
-                                                'American Express'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: 'master' },
-                                                'Mastercard'
-                                            )
-                                        )
-                                    ),
-                                    _react2.default.createElement(
-                                        _reactBootstrap.Col,
-                                        { xs: 6 },
-                                        _react2.default.createElement(
-                                            _reactBootstrap.ControlLabel,
-                                            { style: { marginTop: '1rem' } },
-                                            'Month'
-                                        ),
-                                        _react2.default.createElement(
-                                            _reactBootstrap.FormControl,
-                                            {
-                                                componentClass: 'select',
-                                                id: 'exp_mon',
-                                                placeholder: 'select',
-                                                value: this.state.info.exp_mon,
-                                                onChange: this.handleChange.bind(this)
-                                            },
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '01' },
-                                                '01'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '02' },
-                                                '02'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '03' },
-                                                '03'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '04' },
-                                                '04'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '05' },
-                                                '05'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '06' },
-                                                '06'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '07' },
-                                                '07'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '08' },
-                                                '08'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '09' },
-                                                '09'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '10' },
-                                                '10'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '11' },
-                                                '11'
-                                            ),
-                                            _react2.default.createElement(
-                                                'option',
-                                                { value: '12' },
-                                                '12'
-                                            )
-                                        )
-                                    )
-                                )
-                            ),
-                            _react2.default.createElement(
-                                _reactBootstrap.Col,
-                                { xs: 6 },
-                                _react2.default.createElement(
-                                    'div',
-                                    { 'class': 'card card-block', style: { color: 'white', backgroundColor: '#455461' } },
-                                    _react2.default.createElement(
-                                        'h1',
-                                        null,
-                                        ' My Items '
-                                    )
-                                )
-                            )
-                        )
+                      'option',
+                      { value: 'visa' },
+                      'Visa'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: 'american_express' },
+                      'American Express'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: 'master' },
+                      'Mastercard'
                     )
-                );
-            } else {
-                return _react2.default.createElement(
-                    'div',
-                    null,
-                    ' Loading '
-                );
-            }
-        }
-    }]);
+                  )
+                ),
+                _react2.default.createElement(
+                  _reactBootstrap.Col,
+                  { xs: 6 },
+                  _react2.default.createElement(
+                    _reactBootstrap.ControlLabel,
+                    { style: { marginTop: '1rem' } },
+                    'Month'
+                  ),
+                  _react2.default.createElement(
+                    _reactBootstrap.FormControl,
+                    {
+                      componentClass: 'select',
+                      id: 'exp_mon',
+                      placeholder: 'select',
+                      value: this.state.info.exp_mon,
+                      onChange: this.handleChange.bind(this)
+                    },
+                    _react2.default.createElement(
+                      'option',
+                      { value: '01' },
+                      '01'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '02' },
+                      '02'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '03' },
+                      '03'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '04' },
+                      '04'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '05' },
+                      '05'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '06' },
+                      '06'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '07' },
+                      '07'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '08' },
+                      '08'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '09' },
+                      '09'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '10' },
+                      '10'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '11' },
+                      '11'
+                    ),
+                    _react2.default.createElement(
+                      'option',
+                      { value: '12' },
+                      '12'
+                    )
+                  )
+                )
+              )
+            ),
+            _react2.default.createElement(
+              _reactBootstrap.Col,
+              { xs: 6 },
+              _react2.default.createElement(
+                'div',
+                { className: 'card card-block' },
+                _react2.default.createElement(
+                  'h1',
+                  null,
+                  ' My Items '
+                )
+              )
+            )
+          )
+        );
+      } else {
+        return _react2.default.createElement(
+          'div',
+          null,
+          ' Loading '
+        );
+      }
+    }
+  }]);
 
-    return Checkout;
+  return Checkout;
 }(_react2.default.Component);
 
 exports.default = Checkout;

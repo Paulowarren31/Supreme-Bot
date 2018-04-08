@@ -10,12 +10,11 @@ class Item extends React.Component {
   constructor(props){
     super(props)
 
-
   }
+  
   render(){
     return (
-
-      this.props.src & this.props.shown ? <img style={{padding: '.2rem'}} height={98} width={98} src={'http://' + this.props.src} /> : null
+      this.props.src && this.props.shown ? <img style={{padding: '.2rem'}} height={98} width={98} src={'http://' + this.props.src} /> : null
 
     )
   }

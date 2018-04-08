@@ -5,6 +5,8 @@ import {
   Grid,
   Row,
   Col,
+  FormControl,
+  ControlLabel
 } from 'react-bootstrap';
 
 
@@ -25,20 +27,47 @@ class ItemList extends React.Component {
         return res.json()
       })
       .then(data => {
-        console.log(data)
+        data.Items.forEach( item => {
+          item.shown = true
+        })
+        console.log(data.Items)
+        data.Items.sort((a, b) => {
+          if (a.title < b.title){
+            return 1
+            return -1
+
+          }});
+        console.log(data.Items)
         this.setState({
           items: data.Items,
           loaded: true
         })
       })
   }
+  handleChange(event) {
+    let searchText = event.target.value.toLowerCase()
+    this.setState({
+      searchText: searchText
+    }, () => {
+      // filter items
+      let new_items = this.state.items
+      new_items.forEach( item => {
+        item.shown = (item.title.toLowerCase().indexOf(this.state.searchText) != -1)
+      })
+      this.setState({
+        items: new_items
+      })
+
+    })
+  }
   render() {
     let blockStyle = {
-      color: 'white',
-      backgroundColor: '#173f62',
       display: 'flex',
       justifyContent: 'space-around',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
+      overflowY: 'auto',
+      height: '700px',
+      marginTop: '2rem',
     }
     if (!this.state.loaded) {
       return (
@@ -48,17 +77,24 @@ class ItemList extends React.Component {
       )
     }
     else {
-      console.log(this.state.items)
       return (
+        <div style={{width: '700px', marginBottom: '1.5rem'}}>
+          <ControlLabel style={{ marginTop: '1rem' }}>Search Items</ControlLabel>
+          <FormControl
+            id="item"
+            type="text"
+            value={this.state.searchText}
+            placeholder=""
+            onChange={this.handleChange.bind(this)}/>
 
-        <Row>
 
-          <div class={'container card card-block'} style={blockStyle}>
+          <Row style={blockStyle} id={'scroll'}>
             {this.state.items.map((item, i) =>
-              <Item name={item.title} color={item.color} code={item.itemCode} src={item.src} key={i} />
+              <Item name={item.title} color={item.color} code={item.itemCode} src={item.src} shown={item.shown} key={i} />
             )}
-          </div>
-        </Row>
+
+          </Row>
+        </div>
       )
     }
 
