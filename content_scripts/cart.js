@@ -10,8 +10,8 @@ chrome.storage.sync.get(get, res => {
   $('#order_billing_name').val(res.name);
   $('#order_email').val(res.email);
   $('#order_tel').val(res.phone);
-  $('#bo').val(res.address);
-  $('#oba3').val(res.address2);
+  $('*[placeholder="address"]').val(res.address)
+  $('*[placeholder="apt, unit, etc"]').val(res.address2)
   $('#order_billing_zip').val(res.zip);
   $('#order_billing_city').val(res.city);
 
